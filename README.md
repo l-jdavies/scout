@@ -25,32 +25,9 @@ docker stop <container ID>
 ```
 
 ### Development notes
-**6/30 2pm**
-Currently, the application has an api endpoint `GET /ruleset`.
+**7/12**
+The `scout` daemon needs the following interactions with JetStream:
 
-This ruleset function currently lives in `routes/index.js`.  The final product of our edge server will serve fresh data, but currently we are using a static json file that is in `lib/ruleset.json`.
+* Publish requests with the subject `Data.FullRuleSetRequest` to request full data set from `pioneer` when an SDK client connection occurs
+* Subscribe to `Data.FullRuleSetResponse`, which `pioneer` will send in response to receiving a `Data.FullRuleSetRequest` message.
 
-When a `GET` request comes into the `/ruleset` endpoint, the application first authenticates the request.  The request must have an `Authorization` header with a value `JazzyElksRule` (you can test this out in postman).  If the header isn't present or doesn't have the correct value, an error is returned. If the header is present with the appropriate value, the json will be returned:
-
-```
-// the key of each object in 'flags' is the flagId.  I think using an object rather than an array is smart here because you'll want the SDK to be able to retrieve a flag's current status in constant time (quickly), rather than iterating through an array of flags looking for a matching id.
-{
-  "flags": {
-    "1234": {
-      "toggledOn": true,
-      "title": "flag 1",
-      "createdOn": "2021-06-28"
-    },
-    "5678": {
-      "toggledOn": false,
-      "title": "flag 2",
-      "createdOn": "2021-06-29"
-    },
-    "9101112": {
-      "toggledOn": false,
-      "title": "flag 3",
-      "createdOn": "2021-06-30"
-    }
-  }
-}
-```
