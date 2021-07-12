@@ -59,13 +59,7 @@ function eventsHandler(request, response, next) {
   newClient.response.write(`data: ${JSON.stringify(init)}\n\n`)
 }
 
-function sendEventsToAll(payload) {
-  const data = {
-    eventType: "FEATURE_UPDATE",
-    payload
-  }
-  clients.forEach(client => client.response.write(`data: ${JSON.stringify(data)}\n\n`))
-}
+
 
 router.get('/ruleset', function (req, res, next) {
   const authHeader = req.get('Authorization');
@@ -83,11 +77,19 @@ router.get('/ruleset', function (req, res, next) {
   res.sendFile(path.join(__dirname, '../lib', '/ruleset.json'));
 });
 
+function sendEventsToAll(payload, clients) {
+  const data = {
+    eventType: "FEATURE_UPDATE",
+    payload
+  }
+  clients.forEach(client => client.response.write(`data: ${JSON.stringify(data)}\n\n`))
+}
+
 router.get('/features', eventsHandler);
 
 router.put('/features/hi', function(req, res, next) {
   hiPayload.value = !hiPayload.value;
-  sendEventsToAll(hiPayload);
+  sendEventsToAll(hiPayload, clients);
 
   res.write(`sent ${hiPayload.value}`);
   res.end();
@@ -95,7 +97,9 @@ router.put('/features/hi', function(req, res, next) {
 
 let clients = [];
 
-module.exports = router;
+
+exports.indexRouter = router;
+exports.sendEventsToAll = sendEventsToAll;
 
 /*
 Tested above route in postman:
