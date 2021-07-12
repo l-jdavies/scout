@@ -77,7 +77,7 @@ router.get('/ruleset', function (req, res, next) {
   res.sendFile(path.join(__dirname, '../lib', '/ruleset.json'));
 });
 
-function sendEventsToAll(payload, clients) {
+function sendEventsToAll(payload) {
   const data = {
     eventType: "FEATURE_UPDATE",
     payload
@@ -89,7 +89,7 @@ router.get('/features', eventsHandler);
 
 router.put('/features/hi', function(req, res, next) {
   hiPayload.value = !hiPayload.value;
-  sendEventsToAll(hiPayload, clients);
+  sendEventsToAll(hiPayload);
 
   res.write(`sent ${hiPayload.value}`);
   res.end();
