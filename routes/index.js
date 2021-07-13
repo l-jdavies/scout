@@ -2,12 +2,7 @@ const express = require('express');
 const fs = require('fs');
 const path = require('path');
 const router = express.Router();
-const {pullLatestRuleSet} = require("../lib/jetstream")
-
-const hiPayload = {
-  key: "hi",
-  value: "false"
-}
+const {fetchRecentData} = require("../lib/jetstream")
 
 /*
 Note that this route should not be available unless someone
@@ -54,15 +49,16 @@ async function eventsHandler(request, response, next) {
 
   const init = {
     eventType: "FEATURE_UPDATES",
-    payload: hiPayload
+    payload: []
   }
 
   
   console.log("New client added");
-  let data = await pullLatestRuleSet();
+  let data = await fetchRecentData();
   init.payload = data
   console.log(`new client data: ${init}`);
   
+  // initial payload is empty but immediately followed by the full data set
   newClient.response.write(`data: ${JSON.stringify(init)}\n\n`)
 }
 
