@@ -29,6 +29,8 @@ docker stop <container ID>
 Tried to change the JetStream consumer configs so the push subscriber to `DATA.FullRuleSet` only receives a single message - the last message in the stream. However, after posting a message in the NATS slack, that doesn't seem to be possible.
 ![image](https://user-images.githubusercontent.com/50094605/125531488-2ee92e96-f3be-4204-a089-41532e72e4c1.png)
 
+I tried to unsubscribe after one message but that mean't the subscription to `FullRuleSet` closed completely and meant that when changes were made on the `pioneer` GUI, messages weren't being received but `scout`.
+
 **7/12**
 Summary of current jetstream workflow:
 * When SDK client initially connects:
