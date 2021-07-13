@@ -2,6 +2,7 @@ const express = require('express');
 const fs = require('fs');
 const path = require('path');
 const router = express.Router();
+const {getSingleMessage} = require("../lib/jetstream")
 
 const hiPayload = {
   key: "hi",
@@ -56,7 +57,9 @@ function eventsHandler(request, response, next) {
     payload: hiPayload
   }
 
-  newClient.response.write(`data: ${JSON.stringify(init)}\n\n`)
+  console.log("New client added");
+  getSingleMessage();
+  // newClient.response.write(`data: ${JSON.stringify(init)}\n\n`)
 }
 
 
@@ -98,7 +101,6 @@ router.put('/features/hi', function(req, res, next) {
 })
 
 let clients = [];
-
 
 exports.indexRouter = router;
 exports.sendEventsToAll = sendEventsToAll;
