@@ -82,6 +82,8 @@ function sendEventsToAll(payload) {
     eventType: "FEATURE_UPDATE",
     payload
   }
+
+  console.log("data sent to clients: ", data);
   clients.forEach(client => client.response.write(`data: ${JSON.stringify(data)}\n\n`))
 }
 
