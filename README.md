@@ -26,6 +26,24 @@ docker stop <container ID>
 
 ### Development notes
 **7/12**
+Summary of current jetstream workflow:
+* When SDK client initially connects:
+    * The connection of an SDK client is handled by `scout/routes/index.js` function `eventsHandler`
+    * Following the authorization of the SDK client, the jetstream function `fetchRecentData` is invoked
+    * `fetchRecentData` publishes a jetstream message with the subject `DATA.FullRuleSetRequest`. This message is subscribed to by `pioneer` and triggers `pioneer` to send the full rule set by sending a message on the stream `DATA.FullRuleSet`
+    * `scout` subscribes to messages from `DATA.FullRuleSet` and receiving a `FullRuleSet` message leads to the full rule set being sent to all connected SDK clients.
+    * However, due to the time (less than a second) it takes for `scout` to receive the new data and send to clients, it means the SDK client is initially sent an empty data payload, which is immediately followed with the actual data
+* When any flag changes occur on the `pioneer` GUI:
+    * `pioneer` publishes a `DATA.FullRuleSet` message, which `scout` subscribes too
+    * When a `FullRuleSet` message is received, the data is automatically sent to all connected SDK clients.
+
+Options for optimising the SDK client initial connection workflow:
+* Figure out how to make `scout` a pull subscriber of the `DATA.FullRuleSet` stream
+    * This would enable the `fetchRecentData` `scout/jetstream` function to pull the latest message from the stream and that could be returned by `fetchRecentData`
+    * I spent ages playing with this and although the pull subscription was set-up, I wasn't getting any messages
+* Any other way of getting the most recent message from a stream?
+
+**7/12**
 The `scout` daemon needs the following interactions with JetStream:
 
 * Publish requests with the subject `Data.FullRuleSetRequest` to request full data set from `pioneer` when an SDK client connection occurs
