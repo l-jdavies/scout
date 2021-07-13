@@ -18,7 +18,7 @@ const validKey = (authHeader) => {
   return authHeader === dummyAuthenticator;
 }
 
-function eventsHandler(request, response, next) {
+async function eventsHandler(request, response, next) {
   const authHeader = request.get("Authorization");
 
   if (!validKey(authHeader)) {
@@ -57,9 +57,12 @@ function eventsHandler(request, response, next) {
     payload: hiPayload
   }
 
+  /*
   console.log("New client added");
-  getSingleMessage();
-  // newClient.response.write(`data: ${JSON.stringify(init)}\n\n`)
+  let data = await getSingleMessage();
+  init.payload = data
+  */
+  newClient.response.write(`data: ${JSON.stringify(init)}\n\n`)
 }
 
 
