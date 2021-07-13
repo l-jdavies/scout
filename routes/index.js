@@ -2,7 +2,7 @@ const express = require('express');
 const fs = require('fs');
 const path = require('path');
 const router = express.Router();
-const {getSingleMessage} = require("../lib/jetstream")
+const {pullLatestRuleSet} = require("../lib/jetstream")
 
 const hiPayload = {
   key: "hi",
@@ -57,11 +57,12 @@ async function eventsHandler(request, response, next) {
     payload: hiPayload
   }
 
-  /*
+  
   console.log("New client added");
-  let data = await getSingleMessage();
+  let data = await pullLatestRuleSet();
   init.payload = data
-  */
+  console.log(`new client data: ${init}`);
+  
   newClient.response.write(`data: ${JSON.stringify(init)}\n\n`)
 }
 
