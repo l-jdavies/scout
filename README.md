@@ -15,7 +15,7 @@ This application should be subscribed to a NATS server in order to receive messa
 
 Ensure Docker is running then `docker pull nats` to pull nats server.
 
-To run server in detached mode: `docker run -d --name nats-main -p 4222:4222 -p 6222:6222 -p 8222:8222 nats`
+To run server in detached mode: `docker run -d --name nats-main -p 4222:4222 -p 6222:6222 -p 8222:8222 nats --js`
 
 To stop the docker container when finished with server:
 ```
