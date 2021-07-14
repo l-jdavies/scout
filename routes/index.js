@@ -48,18 +48,13 @@ async function eventsHandler(request, response, next) {
   });
 
   const init = {
-    eventType: "FEATURE_UPDATES",
+    eventType: "CREATE_CONNECTION",
     payload: []
   }
-
+  await fetchRecentData();
   
-  console.log("New client added");
-  let data = await fetchRecentData();
-  init.payload = data
-  console.log(`new client data: ${init}`);
-  
-  // initial payload is empty but immediately followed by the full data set
-  newClient.response.write(`data: ${JSON.stringify(init)}\n\n`)
+  // initial payload is empty
+  newClient.response.write(`data: ${JSON.stringify(init)}\n\n`);
 }
 
 
@@ -82,7 +77,7 @@ router.get('/ruleset', function (req, res, next) {
 
 function sendEventsToAll(payload) {
   const data = {
-    eventType: "FEATURE_UPDATE",
+    eventType: "ALL_FEATURES",
     payload
   }
 
