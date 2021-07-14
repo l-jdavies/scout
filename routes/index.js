@@ -29,10 +29,6 @@ async function eventsHandler(request, response, next) {
   console.log(request.get("Authorization"));
   response.writeHead(200, headers);
 
-  // const data = `data: ${JSON.stringify(facts)}\n\n`;
-
-  // response.write(data);
-
   const clientId = Date.now();
 
   const newClient = {
@@ -58,7 +54,7 @@ async function eventsHandler(request, response, next) {
 }
 
 
-
+/*
 router.get('/ruleset', function (req, res, next) {
   const authHeader = req.get('Authorization');
   if (!validKey(authHeader)) {
@@ -74,6 +70,7 @@ router.get('/ruleset', function (req, res, next) {
   // in the lib dir.
   res.sendFile(path.join(__dirname, '../lib', '/ruleset.json'));
 });
+*/
 
 function sendEventsToAll(payload) {
   const data = {
@@ -81,7 +78,6 @@ function sendEventsToAll(payload) {
     payload
   }
 
-  console.log("data sent to clients: ", data);
   clients.forEach(client => client.response.write(`data: ${JSON.stringify(data)}\n\n`))
 }
 
@@ -99,26 +95,3 @@ let clients = [];
 
 exports.indexRouter = router;
 exports.sendEventsToAll = sendEventsToAll;
-
-/*
-Tested above route in postman:
-{
-  "flags": {
-    "1234": {
-      "toggledOn": true,
-      "title": "flag 1",
-      "createdOn": "2021-06-28"
-    },
-    "5678": {
-      "toggledOn": false,
-      "title": "flag 2",
-      "createdOn": "2021-06-29"
-    },
-    "9101112": {
-      "toggledOn": false,
-      "title": "flag 3",
-      "createdOn": "2021-06-30"
-    }
-  }
-}
-*/
