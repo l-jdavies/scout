@@ -52,6 +52,7 @@ async function eventsHandler(request, response, next) {
   await fetchRecentData();
   
   // initial payload is empty
+  console.log("SDK client connected")
   newClient.response.write(`data: ${JSON.stringify(init)}\n\n`);
 }
 
