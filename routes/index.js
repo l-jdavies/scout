@@ -2,22 +2,24 @@ const express = require('express');
 const fs = require('fs');
 const path = require('path');
 const router = express.Router();
-const {fetchRecentData} = require("../lib/jetstream")
+const {fetchRecentData, fetchSdkKey} = require("../lib/jetstream")
 
+let clientSdkKey;
 /*
 Note that this route should not be available unless someone
 requests with a valid key for security reasons.
 */
-const validKey = (authHeader) => {
-  const dummyAuthenticator = "JazzyElksRule"
-  return authHeader === dummyAuthenticator;
+const validKey = async (authHeader) => {
+  await fetchSdkKey();
+  const auth = `"${authHeader}"`
+  return auth === clientSdkKey;
 }
 
 async function eventsHandler(request, response, next) {
   const authHeader = request.get("Authorization");
 
-  if (!validKey(authHeader)) {
-    return res.status(500).send({
+  if (! await validKey(authHeader)) {
+    return response.status(500).send({
       message: 'Invalid authentication key'
     });
   }
@@ -53,25 +55,6 @@ async function eventsHandler(request, response, next) {
   newClient.response.write(`data: ${JSON.stringify(init)}\n\n`);
 }
 
-
-/*
-router.get('/ruleset', function (req, res, next) {
-  const authHeader = req.get('Authorization');
-  if (!validKey(authHeader)) {
-    return res.status(500).send({
-      message: 'Invalid authentication key'
-    });
-  }
-
-  // here we need to be able to get the updated ruleset
-  // when the SDK demands. this could be from a cache.
-
-  // for now, there's a static ruleset.json file
-  // in the lib dir.
-  res.sendFile(path.join(__dirname, '../lib', '/ruleset.json'));
-});
-*/
-
 function sendEventsToAll(payload) {
   const data = {
     eventType: "ALL_FEATURES",
@@ -79,6 +62,10 @@ function sendEventsToAll(payload) {
   }
 
   clients.forEach(client => client.response.write(`data: ${JSON.stringify(data)}\n\n`))
+}
+
+function updateSdkKey(newKey) {
+  clientSdkKey = newKey;
 }
 
 router.get('/features', eventsHandler);
@@ -95,3 +82,4 @@ let clients = [];
 
 exports.indexRouter = router;
 exports.sendEventsToAll = sendEventsToAll;
+exports.updateSdkKey = updateSdkKey;

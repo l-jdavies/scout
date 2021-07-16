@@ -8,7 +8,7 @@ const port = process.env.PORT || '3030';
 app.set('port', port);
 
 const server = http.createServer(app);
-const {initSubscribe}= require('../lib/jetstream');
+const {initSubscribe, fetchSdkKey}= require('../lib/jetstream');
 
 
 server.listen(port);
@@ -46,5 +46,6 @@ function onListening() {
     ? 'pipe ' + addr
     : 'port ' + addr.port;
   initSubscribe();
+  fetchSdkKey();
   debug('Listening on ' + bind);
 }
