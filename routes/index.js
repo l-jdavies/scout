@@ -2,7 +2,8 @@ const express = require('express');
 const fs = require('fs');
 const path = require('path');
 const router = express.Router();
-const {fetchRecentData, fetchSdkKey} = require("../lib/jetstream")
+// const {fetchRecentData, fetchSdkKey} = require("../lib/jetstream")
+const jsw = require("../lib/jsw");
 
 let clientSdkKey;
 /*
@@ -10,7 +11,7 @@ Note that this route should not be available unless someone
 requests with a valid key for security reasons.
 */
 const validKey = async (authHeader) => {
-  await fetchSdkKey();
+  await jsw.fetchSdkKey();
   const auth = `"${authHeader}"`
   return auth === clientSdkKey;
 }
@@ -49,7 +50,7 @@ async function eventsHandler(request, response, next) {
     eventType: "CREATE_CONNECTION",
     payload: []
   }
-  await fetchRecentData();
+  await jsw.fetchRecentData();
   
   // initial payload is empty
   console.log("SDK client connected")
