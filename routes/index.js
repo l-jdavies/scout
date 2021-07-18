@@ -7,7 +7,13 @@ const jsw = require("../lib/jsw");
 const sdkPoolManager = require("../lib/sdkPoolManager");
 const Client = require("../lib/client");
 
-let clientSdkKey;
+const headers = {
+  'Content-Type': 'text/event-stream',
+  'Connection': 'keep-alive',
+  'Cache-Control': 'no-cache'
+};
+
+// let clientSdkKey;
 /*
 Note that this route should not be available unless someone
 requests with a valid key for security reasons.
@@ -26,11 +32,7 @@ async function eventsHandler(request, response, next) {
       message: 'Invalid authentication key'
     });
   }
-  const headers = {
-    'Content-Type': 'text/event-stream',
-    'Connection': 'keep-alive',
-    'Cache-Control': 'no-cache'
-  };
+  
   console.log(request.get("Authorization"));
   response.writeHead(200, headers);
 
@@ -84,7 +86,7 @@ router.put('/features/hi', function(req, res, next) {
   res.end();
 })
 
-let clients = [];
+// let clients = [];
 
 exports.indexRouter = router;
 // exports.sendEventsToAll = sendEventsToAll;
