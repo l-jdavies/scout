@@ -4,22 +4,23 @@ const path = require('path');
 const router = express.Router();
 // const {fetchRecentData, fetchSdkKey} = require("../lib/jetstream")
 const jsw = require("../lib/jsw");
+const sdkPoolManager = require("../lib/sdkPoolManager");
 
 let clientSdkKey;
 /*
 Note that this route should not be available unless someone
 requests with a valid key for security reasons.
 */
-const validKey = async (authHeader) => {
-  await jsw.fetchSdkKey();
-  const auth = `"${authHeader}"`
-  return auth === clientSdkKey;
-}
+// const validKey = async (authHeader) => {
+//   await jsw.fetchSdkKey();
+//   const auth = `"${authHeader}"`
+//   return auth === clientSdkKey;
+// }
 
 async function eventsHandler(request, response, next) {
   const authHeader = request.get("Authorization");
 
-  if (! await validKey(authHeader)) {
+  if (! sdkPoolManager.checkValidKey(authHeader)) {
     return response.status(500).send({
       message: 'Invalid authentication key'
     });
@@ -39,11 +40,12 @@ async function eventsHandler(request, response, next) {
     response
   };
 
-  clients.push(newClient);
+  sdkPoolManager.addClient(newClient);
 
   request.on('close', () => {
     console.log(`${clientId} Connection closed`);
-    clients = clients.filter(client => client.id !== clientId);
+    // clients = clients.filter(client => client.id !== clientId);
+    sdkPoolManager.removeClient(newClient);
   });
 
   const init = {
@@ -57,24 +59,24 @@ async function eventsHandler(request, response, next) {
   newClient.response.write(`data: ${JSON.stringify(init)}\n\n`);
 }
 
-function sendEventsToAll(payload) {
-  const data = {
-    eventType: "ALL_FEATURES",
-    payload
-  }
+// function sendEventsToAll(payload) {
+//   const data = {
+//     eventType: "ALL_FEATURES",
+//     payload
+//   }
 
-  clients.forEach(client => client.response.write(`data: ${JSON.stringify(data)}\n\n`))
-}
+//   clients.forEach(client => client.response.write(`data: ${JSON.stringify(data)}\n\n`))
+// }
 
-function updateSdkKey(newKey) {
-  clientSdkKey = newKey;
-}
+// function updateSdkKey(newKey) {
+//   clientSdkKey = newKey;
+// }
 
 router.get('/features', eventsHandler);
 
 router.put('/features/hi', function(req, res, next) {
   hiPayload.value = !hiPayload.value;
-  sendEventsToAll(hiPayload);
+  // sendEventsToAll(hiPayload);
 
   res.write(`sent ${hiPayload.value}`);
   res.end();
@@ -83,5 +85,5 @@ router.put('/features/hi', function(req, res, next) {
 let clients = [];
 
 exports.indexRouter = router;
-exports.sendEventsToAll = sendEventsToAll;
-exports.updateSdkKey = updateSdkKey;
+// exports.sendEventsToAll = sendEventsToAll;
+// exports.updateSdkKey = updateSdkKey;
