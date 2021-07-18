@@ -5,6 +5,7 @@ const router = express.Router();
 // const {fetchRecentData, fetchSdkKey} = require("../lib/jetstream")
 const jsw = require("../lib/jsw");
 const sdkPoolManager = require("../lib/sdkPoolManager");
+const Client = require("../lib/client");
 
 let clientSdkKey;
 /*
@@ -35,10 +36,11 @@ async function eventsHandler(request, response, next) {
 
   const clientId = Date.now();
 
-  const newClient = {
+  const newClient = new Client({
     id: clientId,
-    response
-  };
+    response,
+    authorizationKey: authHeader
+  });
 
   sdkPoolManager.addClient(newClient);
 
@@ -56,7 +58,7 @@ async function eventsHandler(request, response, next) {
   
   // initial payload is empty
   console.log("SDK client connected")
-  newClient.response.write(`data: ${JSON.stringify(init)}\n\n`);
+  newClient.write(`data: ${JSON.stringify(init)}\n\n`);
 }
 
 // function sendEventsToAll(payload) {
