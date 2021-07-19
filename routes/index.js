@@ -4,26 +4,16 @@ const jsw = require('../lib/jsw');
 const sdkPoolManager = require('../lib/sdkPoolManager');
 const Client = require('../lib/client');
 
-// const fs = require('fs');
-// const path = require('path');
-// const {fetchRecentData, fetchSdkKey} = require("../lib/jetstream")
-
 const headers = {
 	'Content-Type'  : 'text/event-stream',
 	Connection      : 'keep-alive',
 	'Cache-Control' : 'no-cache'
 };
 
-// let clientSdkKey;
 /*
 Note that this route should not be available unless someone
 requests with a valid key for security reasons.
 */
-// const validKey = async (authHeader) => {
-//   await jsw.fetchSdkKey();
-//   const auth = `"${authHeader}"`
-//   return auth === clientSdkKey;
-// }
 
 async function eventsHandler(request, response, next) {
 	const authHeader = request.get('Authorization');
@@ -49,7 +39,6 @@ async function eventsHandler(request, response, next) {
 
 	request.on('close', () => {
 		console.log(`${clientId} Connection closed`);
-		// clients = clients.filter(client => client.id !== clientId);
 		sdkPoolManager.removeClient(newClient);
 	});
 
@@ -63,32 +52,6 @@ async function eventsHandler(request, response, next) {
 	console.log('SDK client connected');
 	newClient.write(`data: ${JSON.stringify(init)}\n\n`);
 }
-
-// function sendEventsToAll(payload) {
-//   const data = {
-//     eventType: "ALL_FEATURES",
-//     payload
-//   }
-
-//   clients.forEach(client => client.response.write(`data: ${JSON.stringify(data)}\n\n`))
-// }
-
-// function updateSdkKey(newKey) {
-//   clientSdkKey = newKey;
-// }
-
 router.get('/features', eventsHandler);
 
-router.put('/features/hi', function(req, res, next) {
-	hiPayload.value = !hiPayload.value;
-	// sendEventsToAll(hiPayload);
-
-	res.write(`sent ${hiPayload.value}`);
-	res.end();
-});
-
-// let clients = [];
-
 exports.indexRouter = router;
-// exports.sendEventsToAll = sendEventsToAll;
-// exports.updateSdkKey = updateSdkKey;
