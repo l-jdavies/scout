@@ -4,7 +4,7 @@ const app = require('../app');
 const debug = require('debug')('dummy-express:server');
 const http = require('http');
 
-const port = process.env.PORT || '3030';
+const port = process.env.SCOUT_PORT || '3030';
 app.set('port', port);
 
 const server = http.createServer(app);
