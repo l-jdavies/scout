@@ -4,7 +4,7 @@
 
 # Scout
 
-Scout is a daemon that serves feature flag data from Compass to connected SDK clients, as part of the Pioneer feature flag management architecture. For more information, visit Pioneer's case study page.
+Scout is a daemon that serves feature flag data from Compass to connected SDK clients, as part of the Pioneer feature flag management architecture. For more information, visit Pioneer's [case study page](https://pioneer-io.github.io/).
 
 ## Usage
 Scout is set up as a subscriber of NATS messages from the `DATA` and `KEY` streams. The `DATA` stream is used to receive updated feature flag rulesets from [Compass](https://github.com/pioneer-io/compass/blob/main/README.md). They `KEY` stream is used to receive the current valid SDK key from Compass.
