@@ -2,6 +2,8 @@
     <img src="https://user-images.githubusercontent.com/56378698/127357452-1b57af9c-be5a-42ff-aecb-bd2e2c006716.png" alt="Pioneer logo" width="200" height="200">
 </p>
 
+[![Scout](https://github.com/pioneer-io/scout/actions/workflows/verify.yml/badge.svg)](https://github.com/pioneer-io/scout/actions/workflows/verify.yml)
+
 # Scout
 
 Scout is a daemon that serves feature flag data from Compass to connected SDK clients, as part of the Pioneer feature flag management architecture. For more information, visit Pioneer's [case study page](https://pioneer-io.github.io/).
