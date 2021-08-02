@@ -38,3 +38,9 @@ docker ps
 docker stop <container ID>
 ```
 
+### Unit Tests
+Run the following from the root directory:
+
+```
+npm test
+```
