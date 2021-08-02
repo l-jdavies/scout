@@ -3,6 +3,7 @@
 </p>
 
 [![Scout](https://github.com/pioneer-io/scout/actions/workflows/verify.yml/badge.svg)](https://github.com/pioneer-io/scout/actions/workflows/verify.yml)
+[![Maintainability](https://api.codeclimate.com/v1/badges/365637e5f80287628749/maintainability)](https://codeclimate.com/github/pioneer-io/scout/maintainability)
 
 # Scout
 
