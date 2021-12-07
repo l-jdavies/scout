@@ -7,6 +7,8 @@
 
 # Scout
 
+# ⚠️ This project is no longer actively maintained ⚠️
+
 Scout is a daemon that serves feature flag data from Compass to connected SDK clients, as part of the Pioneer feature flag management architecture. For more information, visit Pioneer's [case study page](https://pioneer-io.github.io/).
 
 ## Usage
